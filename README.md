@@ -1,3 +1,8 @@
+# Project Purpose
+
+The purpose this project serves is to demonstate knowledge of Js, React, JSON, API calls and DevSecOps.
+Rather than having a static To Do list, or even a basic React To Do that resets on every page load, my goal is to take it to higher levels by implementing a back end server which can feed data.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
