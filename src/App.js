@@ -1,30 +1,25 @@
 import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { pages } from './pages';
+
+import NavBar from './components/NavBar/NavBar';
 import ToDoList from './components/ToDoList/ToDoList';
 
 function App() {
   return (
-    <div className="App">
+    <BrowserRouter>
+    <main className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        {
-        /* 
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        */
-        }
-        <ToDoList />
+        <NavBar />
+        <Routes>
+          {pages.map(({ path, element }) => (
+            <Route key={path} path={path} element={element} />
+          ))}
+        </Routes>
       </header>
-    </div>
+    </main>
+    </BrowserRouter>
   );
 }
 

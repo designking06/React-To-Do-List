@@ -46,19 +46,27 @@ export default function ToDoList() {
 
     // fetch data
     useEffect(() => {
-        (async () => {
+        (async function fetchTodos () {
         try {
-        const data = await getData();
-        const list = Array.isArray(data) ? data : [data];
-        setApiData(list);
+            // Grab API Items
+            const data = await getData();
+            const list = Array.isArray(data) ? data : [data];
+            const newApiItems = list.map(apiItem => ({
+                title: apiItem.title,
+                id: apiItem.id,
+                completed: false, // Set a default value for the new property
+            }));
+            setApiData(newApiItems);
 
-        // Use .map() to transform the API data into the correct format
-        const newTodoItems = list.map(apiItem => ({
-        name: apiItem.title,
-        id: apiItem.id,
-        completed: false, // Set a default value for the new property
-        }));
-        setTask([...tasksList, ...newTodoItems]);
+            // Grab Items stored locally
+            const newLocalItems = tasksList.map(apiItem => ({
+                title: apiItem.name,
+                id: apiItem.id,
+                completed: false, // Set a default value for the new property
+            }));
+
+            // Merge API and local items
+            setApiData(prevData => [...prevData, ...newLocalItems]);
 
         } catch (err) {
             setError(err);
@@ -70,31 +78,32 @@ export default function ToDoList() {
 
     }, []);
 
-    if (error) return <div>Error: {error.message}</div>;
-    // If task is completed, do not display the complete button, only display the incomplete button. 
-    return (
-        <div className="task-app">
-            <h1>To-Do List</h1>
-            <input
-                className="task-form-input"
-                type="text"
-                value={inputValue}
-                onChange={handleInputChange}
-                placeholder="Enter a new task"
-            /><button onClick={addTask} className="task-form-button">Add Task</button>
-            
-            <ul className="task-list">
-                {tasksList.map((task) => (
-                    <li key={task.id} >
-                        <span className="text">{task.completed ? <s>{task.name}</s> : task.name}</span>
-                        <button className="complete-button" onClick={() => completeTaskToggle(task.id)}>Toggle Complete</button>
-
-                        <button className="delete-button" onClick={() => deleteTask(task.id)}>Delete Task</button>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+    if (error) return <div>Error:</div>
+    else {
+        // If task is completed, do not display the complete button, only display the incomplete button. 
+        return (
+            <div className="task-app">
+                <h1>To-Do List</h1>
+                <input
+                    className="task-form-input"
+                    type="text"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    placeholder="Enter a new task"
+                /><button onClick={addTask} className="task-form-button">Add Task</button>
+                
+                <ul className="task-list">
+                    {apiData.map((task) => (
+                        <li key={task.id} >
+                            <span className="text">{task.completed ? <s>{task.title}</s> : task.title}</span>
+                            <button className="complete-button" onClick={() => completeTaskToggle(task.id)}>Toggle Complete</button>
+                            <button className="delete-button" onClick={() => deleteTask(task.id)}>Delete Task</button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        );
+    }
 
 };
 
